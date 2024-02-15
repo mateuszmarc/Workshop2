@@ -46,7 +46,7 @@ public class User {
             this.password = password;
             return;
         }
-        System.out.println("Incorrect value for password parameter");
+        System.out.println("Incorrect value for password parameter. Password has to have at least 10 characters");
     }
 
     public String getEmail() {
