@@ -13,7 +13,7 @@ public class User {
         setPassword(password);
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 

@@ -68,4 +68,37 @@ public class UserDao {
     public String hashPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
+
+    public void update(User user) {
+        int id = user.getId();
+        String username = user.getUsername();
+        String email = user.getEmail();
+        String password = user.getPassword();
+        int updatedRows = 0;
+
+        if (username == null || username.isBlank() || email == null || email.isBlank() || password == null || password.isBlank()) {
+            System.out.println("Invalid data provided for update");
+            System.out.println(updatedRows + " rows updated");
+
+            return;
+        }
+
+        try (Connection connection = DbUtil.connect(); PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_QUERY)) {
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, email);
+            String hashedPassword = hashPassword(password);
+            preparedStatement.setString(3, hashedPassword);
+            preparedStatement.setInt(4, id);
+
+            updatedRows = preparedStatement.executeUpdate();
+
+            if (updatedRows == 0) {
+                System.out.println("There was no record to update that has id = " + id);
+            }
+
+            System.out.println(updatedRows + " rows updated");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }
