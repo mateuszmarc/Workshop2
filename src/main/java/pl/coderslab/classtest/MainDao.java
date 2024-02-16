@@ -82,7 +82,7 @@ public class MainDao {
         userBlankDataFields.setEmail(null);
         System.out.println(userBlankDataFields);
 
-        User retrievedUser2 = userDao.read(11);
+        User retrievedUser2 = userDao.read(12);
         System.out.println(retrievedUser2);
 
         retrievedUser2.setUsername("changedUsername");
@@ -91,5 +91,14 @@ public class MainDao {
         userDao.update(retrievedUser2);
 
         System.out.println("User after update:" + userDao.read(11));
+        System.out.println("\n\n\n\n\n");
+
+//        Testing delete(int userId) method
+        System.out.println("Present record in database : " + userDao.read(11));
+        System.out.println("Deleting user with id = 11...");
+        userDao.delete(11);
+        System.out.println("Trying to retrieve user with id = 11: " + userDao.read(11));
+        System.out.println("Trying to delete record with incorrect id...");
+        userDao.delete(11);
     }
 }

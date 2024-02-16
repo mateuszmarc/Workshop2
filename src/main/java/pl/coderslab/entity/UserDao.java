@@ -101,4 +101,17 @@ public class UserDao {
             System.out.println(e.getMessage());
         }
     }
+
+    public void delete(int userId) {
+        try (Connection connection = DbUtil.connect(); PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER_QUERY)) {
+            preparedStatement.setInt(1, userId);
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 0) {
+                System.out.println("There is no user record having id = " + userId);
+            }
+            System.out.println(affectedRows + " rows affected");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }
