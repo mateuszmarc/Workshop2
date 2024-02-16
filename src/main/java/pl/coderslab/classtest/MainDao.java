@@ -30,5 +30,20 @@ public class MainDao {
         if (userNotAdded == null) {
             System.out.println("New user not added");
         }
+
+        System.out.println("\n\n\n\n\n");
+
+//        for (int i = 0; i < 10; i++) {
+//            String username = "test" + i;
+//            String email = "test" + i + "@gmail.com";
+//            String password = "test1234567" + i;
+//            User userToAdd = new User(username, email, password);
+//            userDao.create(userToAdd);
+//        }
+
+//        Testing read(int id) method
+        for (int i = -1; i < 20; i++) {
+            System.out.println(userDao.read(i));
+        }
     }
 }

@@ -45,6 +45,26 @@ public class UserDao {
 
     }
 
+    public User read(int userId) {
+        try (Connection connection = DbUtil.connect(); PreparedStatement preparedStatement = connection.prepareStatement(READ_USER_QUERY)) {
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String username = resultSet.getString("username");
+                String email = resultSet.getString("email");
+                String password = resultSet.getString("password");
+                User user = new User(username, email, password);
+                user.setId(id);
+                return user;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("There was no user with given id = " + userId);
+        return null;
+    }
+
     public String hashPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
