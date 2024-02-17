@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 public class UserDao {
     public static final String CREATE_USER_QUERY = "INSERT INTO users(username, email, password) VALUES (?, ?, ?)";
@@ -49,14 +50,9 @@ public class UserDao {
         try (Connection connection = DbUtil.connect(); PreparedStatement preparedStatement = connection.prepareStatement(READ_USER_QUERY)) {
             preparedStatement.setInt(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String username = resultSet.getString("username");
-                String email = resultSet.getString("email");
-                String password = resultSet.getString("password");
-                User user = new User(username, email, password);
-                user.setId(id);
-                return user;
+            User[] retrievedUsers = createUsersFromResultSet(resultSet);
+            if (retrievedUsers.length != 0) {
+                return retrievedUsers[0];
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -114,4 +110,37 @@ public class UserDao {
             System.out.println(e.getMessage());
         }
     }
+
+    public User[] findAll() {
+        User[] retrievedUsers = new User[0];
+        try (Connection connection = DbUtil.connect(); PreparedStatement preparedStatement = connection.prepareStatement(READ_ALL_USERS)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            retrievedUsers = createUsersFromResultSet(resultSet);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return retrievedUsers;
+    }
+
+    private User[] addToArray(User user, User[] users) {
+        User[] tempArray = Arrays.copyOf(users, users.length +1);
+        tempArray[users.length] = user;
+        return tempArray;
+    }
+
+    private User[] createUsersFromResultSet(ResultSet resultSet) throws SQLException {
+        User[] retrievedUsers = new User[0];
+        while (resultSet.next()) {
+            int id = resultSet.getInt("id");
+            String username = resultSet.getString("username");
+            String email = resultSet.getString("email");
+            String password = resultSet.getString("password");
+            User user = new User(username, email, password);
+            user.setId(id);
+            retrievedUsers = addToArray(user, retrievedUsers);
+        }
+        return retrievedUsers;
+    }
+
+
 }

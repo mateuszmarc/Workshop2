@@ -16,7 +16,7 @@ public class MainDao {
         user1.setEmail("mati@gmail.com");
         user1.setPassword("12345678901");
         System.out.println("User after changes : " + user1);
-
+//
         UserDao userDao = new UserDao();
 
         User userWithId = userDao.create(user1);
@@ -100,5 +100,10 @@ public class MainDao {
         System.out.println("Trying to retrieve user with id = 11: " + userDao.read(11));
         System.out.println("Trying to delete record with incorrect id...");
         userDao.delete(11);
+
+        User[] allUsers = userDao.findAll();
+        for (User user: allUsers) {
+            System.out.println(user);
+        }
     }
 }
